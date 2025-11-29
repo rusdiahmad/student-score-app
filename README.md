@@ -1,1 +1,1 @@
-# student-score-app
+https://examscoreprediction.streamlit.app/
