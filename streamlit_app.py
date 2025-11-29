@@ -31,6 +31,40 @@ def load_assets():
 
 model, preprocessor = load_assets()
 
+# --- FUNGSI BARU: ANALISIS VARIABEL DAN SARAN SPESIFIK ---
+def analyze_and_suggest(df, final_score):
+    """Menganalisis data input dan menghasilkan saran spesifik berdasarkan kelemahan."""
+    saran_spesifik = []
+    
+    # 1. Analisis Faktor Akademik Kunci (Hours_Studied, Attendance, Tutoring_Sessions)
+    if df['Hours_Studied'][0] < 20:
+        saran_spesifik.append(f"- **Jam Belajar:** Tingkatkan `Study Hours` (saat ini {df['Hours_Studied'][0]} jam) menjadi minimal 20-25 jam per minggu. Ini adalah faktor pendorong skor terbesar.")
+    
+    if df['Attendance'][0] < 90:
+        saran_spesifik.append(f"- **Kehadiran:** Kehadiran rendah ({df['Attendance'][0]}%) berisiko besar. Harus ditingkatkan menjadi >95% untuk memastikan tidak ada materi yang terlewat.")
+        
+    if df['Tutoring_Sessions'][0] == 0:
+        saran_spesifik.append("- **Sesi Bimbingan:** Pertimbangkan untuk menambah Sesi Bimbingan (Tutoring Sessions) secara berkala (1-2 kali/bulan) untuk mengatasi kelemahan spesifik.")
+
+    # 2. Analisis Faktor Lingkungan & Personal (Motivation, Parental Involvement)
+    if df['Motivation_Level'][0] == 'Low' and final_score < 80:
+        saran_spesifik.append("- **Motivasi:** Tingkat Motivasi Rendah. Lakukan pendekatan personal untuk menemukan pemicu semangat belajar siswa.")
+        
+    if df['Parental_Involvement'][0] == 'Low' and final_score < 75:
+        saran_spesifik.append("- **Keterlibatan Ortu:** Keterlibatan Orang Tua Rendah. Sekolah perlu mengadakan pertemuan untuk menyelaraskan tujuan dan meningkatkan pengawasan di rumah.")
+        
+    # 3. Analisis Faktor Kesehatan (Sleep_Hours, Physical_Activity)
+    sleep = df['Sleep_Hours'][0]
+    if sleep < 6:
+        saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur terlalu singkat ({sleep} jam). Pastikan siswa tidur 7-8 jam per hari untuk konsentrasi optimal.")
+    elif sleep > 9:
+        saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur ({sleep} jam) mungkin berlebihan. Perlu evaluasi apakah ini disebabkan oleh kelelahan atau masalah lain.")
+        
+    if df['Physical_Activity'][0] < 2:
+        saran_spesifik.append("- **Aktivitas Fisik:** Tingkat Aktivitas Fisik rendah. Dorong siswa untuk berolahraga minimal 3 jam per minggu untuk menjaga kesehatan mental dan fokus.")
+        
+    return saran_spesifik
+
 # --- 3. JUDUL & HEADER ---
 st.title("🎓 Prediksi Performa Siswa (Model LightGBM)")
 st.markdown("""
@@ -156,30 +190,34 @@ if submit_btn:
             st.metric(label="Prediksi Skor Ujian", value=f"{final_score:.2f}")
 
         # 5. GENERATE KESIMPULAN & SARAN BERDASARKAN SKOR
-        kesimpulan = ""
-        saran = ""
+        saran_spesifik = analyze_and_suggest(input_df, final_score)
         
         if final_score >= 85:
             st.success("🌟 **Kategori: Sangat Baik.** Siswa diprediksi mencapai performa akademik yang luar biasa.")
-            kesimpulan = "Siswa menunjukkan profil yang kuat di hampir semua faktor kunci. Prediksi skor 85 atau lebih tinggi menunjukkan peluang keberhasilan yang sangat tinggi. Perlu mempertahankan konsistensi."
-            saran = "1. **Pertahankan Kebiasaan:** Pastikan Jam Belajar, Kehadiran, dan Keterlibatan Orang Tua tetap optimal. 2. **Eksplorasi Mendalam:** Arahkan siswa untuk mendalami topik yang diminati (misalnya, melalui proyek atau penelitian independen) untuk mencapai keunggulan. 3. **Perencanaan Karir:** Mulai diskusikan pilihan universitas atau jalur karir."
-
+            kesimpulan = "Siswa menunjukkan profil yang sangat kuat. Perlu mempertahankan konsistensi dan terus mencari peluang untuk keunggulan."
+        
         elif final_score >= 70:
             st.info("✅ **Kategori: Baik.** Siswa berada di jalur yang memuaskan namun memiliki potensi untuk meningkatkan performa.")
-            kesimpulan = "Siswa memiliki dasar akademis yang solid. Faktor-faktor lingkungan dan kebiasaan menunjukkan keseimbangan, namun ada satu atau dua area yang menahan skor untuk mencapai kategori 'Sangat Baik'."
-            saran = f"1. **Fokus pada Belajar:** Tingkatkan `Study Hours` ke 25-30 jam/minggu. 2. **Maksimalkan Dukungan:** Tambahkan `Tutoring Sessions` atau manfaatkan sumber daya akademik di sekolah. 3. **Cek Keseimbangan:** Pastikan `Sleep Hours` dan `Physical Activity` berada di zona optimal (7-8 jam tidur, 3-5 jam olahraga/minggu) untuk menghindari burnout."
-            
+            kesimpulan = "Siswa memiliki dasar akademis yang solid, namun terdapat beberapa faktor kebiasaan atau lingkungan yang dapat ditingkatkan untuk mencapai kategori 'Sangat Baik'."
+
         else: # final_score < 70
             st.error("⚠️ **Kategori: Perlu Intervensi (Peringatan Dini).** Skor diprediksi rendah; tindakan segera diperlukan.")
-            kesimpulan = "Prediksi skor di bawah 70 mengindikasikan bahwa siswa menghadapi tantangan signifikan. Area `Previous Scores`, `Motivation Level`, atau `Parental Involvement` kemungkinan menjadi faktor utama yang memerlukan perhatian segera."
-            saran = f"1. **Tinjau Motivasi & Keterlibatan:** Adakan pertemuan dengan orang tua untuk meningkatkan `Parental Involvement`. Cek `Motivation Level` siswa secara berkala. 2. **Intervensi Akademik Cepat:** Fokus pada subjek terlemah. Pertimbangkan sesi bimbingan tambahan (Tutor) jika `Tutoring Sessions` masih rendah. 3. **Perbaiki Dasar:** Tingkatkan `Attendance` (kehadiran) dan pastikan `Hours_Studied` mencapai minimal 15 jam/minggu."
-
+            kesimpulan = "Prediksi skor rendah mengindikasikan bahwa siswa menghadapi tantangan signifikan. Fokus utama harus diberikan pada faktor-faktor kunci yang dinilai lemah dalam profil input."
+        
         with res_col2:
             st.markdown(kesimpulan)
         
         st.markdown("---")
-        st.markdown("### 📋 Rekomendasi & Saran Tindakan")
-        st.warning(saran)
+        st.markdown("### 📋 Rekomendasi Tindakan Spesifik")
+
+        if saran_spesifik:
+            # Jika ada saran spesifik berdasarkan variabel input yang lemah
+            st.warning("Berdasarkan data input siswa, berikut adalah prioritas tindakan untuk meningkatkan skor:")
+            for saran in saran_spesifik:
+                st.markdown(saran)
+        else:
+            # Jika skor sangat tinggi dan tidak ada variabel yang 'lemah'
+            st.success("Semua faktor kunci berada pada tingkat optimal. Tidak ada intervensi mendesak yang diperlukan selain mempertahankan konsistensi.")
         
         # Optional: Display input data for verification
         with st.expander("Lihat Detail Data Siswa yang Dianalisis"):
