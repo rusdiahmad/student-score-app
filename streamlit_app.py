@@ -161,15 +161,19 @@ with st.form("full_prediction_form"):
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        hours_studied = st.number_input("Study Hours (per week)", 0, 50, 20, help="Total self-study hours outside school.")
-        attendance = st.slider("Attendance (%)", 50, 100, 80)
+        # Peningkatan default untuk Hours_Studied dari 20 menjadi 30
+        hours_studied = st.number_input("Study Hours (per week)", 0, 50, 30, help="Total self-study hours outside school. Ideal 30-40 jam.") 
+        # Peningkatan default untuk Attendance dari 80 menjadi 95
+        attendance = st.slider("Attendance (%)", 50, 100, 95) 
     
     with col2:
-        previous_scores = st.number_input("Previous Exam Score", 0, 100, 75, help="Nilai rata-rata ujian sebelumnya.")
+        # Peningkatan default untuk Previous_Scores dari 75 menjadi 90
+        previous_scores = st.number_input("Previous Exam Score", 0, 100, 90, help="Nilai rata-rata ujian sebelumnya. Ideal > 90.") 
         tutoring_sessions = st.number_input("Tutoring Sessions (per month)", 0, 10, 1)
         
     with col3:
-        sleep_hours = st.slider("Sleep Hours (per day)", 4, 10, 7)
+        # Peningkatan default untuk Sleep_Hours dari 7 menjadi 8
+        sleep_hours = st.slider("Sleep Hours (per day)", 4, 10, 8) 
         physical_activity = st.slider("Physical Activity (hours/week)", 0, 10, 3)
 
     st.divider()
@@ -181,14 +185,18 @@ with st.form("full_prediction_form"):
         col4, col5, col6 = st.columns(3)
         
         with col4:
-            parental_involvement = st.selectbox("Parental Involvement", ["Low", "Medium", "High"], index=1)
-            access_resources = st.selectbox("Access to Resources", ["Low", "Medium", "High"], index=1)
-            family_income = st.selectbox("Family Income", ["Low", "Medium", "High"], index=1)
+            # Peningkatan default dari Medium menjadi High
+            parental_involvement = st.selectbox("Parental Involvement", ["Low", "Medium", "High"], index=2) 
+            # Peningkatan default dari Medium menjadi High
+            access_resources = st.selectbox("Access to Resources", ["Low", "Medium", "High"], index=2) 
+            # Peningkatan default dari Medium menjadi High
+            family_income = st.selectbox("Family Income", ["Low", "Medium", "High"], index=2) 
             
         with col5:
-            teacher_quality = st.selectbox("Teacher Quality", ["Low", "Medium", "High"], index=1)
-            parental_education = st.selectbox("Parental Education Level", ["High School", "College", "Postgraduate"], index=1)
-            peer_influence = st.selectbox("Peer Influence", ["Positive", "Neutral", "Negative"], index=1)
+            # Peningkatan default dari Medium menjadi High
+            teacher_quality = st.selectbox("Teacher Quality", ["Low", "Medium", "High"], index=2) 
+            parental_education = st.selectbox("Parental Education Level", ["High School", "College", "Postgraduate"], index=2)
+            peer_influence = st.selectbox("Peer Influence", ["Positive", "Neutral", "Negative"], index=0)
             
         with col6:
             school_type = st.selectbox("School Type", ["Public", "Private"])
@@ -199,7 +207,8 @@ with st.form("full_prediction_form"):
     st.subheader("👤 Faktor Personal Lainnya") # Judul dalam B. Indonesia
     col7, col8, col9 = st.columns(3)
     with col7:
-        motivation = st.selectbox("Motivation Level", ["Low", "Medium", "High"], index=1)
+        # Peningkatan default dari Medium menjadi High
+        motivation = st.selectbox("Motivation Level", ["Low", "Medium", "High"], index=2)
     with col8:
         gender = st.radio("Gender", ["Male", "Female"], horizontal=True)
     with col9:
