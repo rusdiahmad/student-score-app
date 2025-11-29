@@ -200,8 +200,8 @@ with st.form("full_prediction_form"):
             
         with col6:
             school_type = st.selectbox("School Type", ["Public", "Private"])
-            internet_access = st.radio("Internet Access", ["Yes", "No"], horizontal=True)
-            distance_home = st.selectbox("Distance from Home", ["Near", "Moderate", "Far"])
+            internet_access = st.radio("Internet Access", ["Yes", "No"], horizontal=True, index=0)
+            distance_home = st.selectbox("Distance from Home", ["Near", "Moderate", "Far"], index=0)
 
     # --- SECTION 3: FAKTOR PERSONAL LAINNYA ---
     st.subheader("👤 Faktor Personal Lainnya") # Judul dalam B. Indonesia
@@ -210,7 +210,7 @@ with st.form("full_prediction_form"):
         # Peningkatan default dari Medium menjadi High
         motivation = st.selectbox("Motivation Level", ["Low", "Medium", "High"], index=2)
     with col8:
-        gender = st.radio("Gender", ["Male", "Female"], horizontal=True)
+        gender = st.radio("Gender", ["Male", "Female"], horizontal=True, index=1)
     with col9:
         extra_activities = st.checkbox("Participate in Extracurriculars?", value=True)
         learning_disabilities = st.checkbox("Has Learning Disabilities?", value=False)
@@ -247,7 +247,7 @@ if submit_btn:
         'Physical_Activity': [physical_activity],
         'Learning_Disabilities': [learning_val],
         'Parental_Education_Level': [parental_education],
-        'Distance_from_Home': [distance_home],
+        'Distance_from_Home': [distance_from_home],
         'Gender': [gender]
     }
 
