@@ -146,23 +146,40 @@ if submit_btn:
         # 3. Constrain score 0-100 (Wajib karena LGBM bisa memprediksi di luar rentang)
         final_score = max(0.0, min(100.0, final_score))
         
-        # 4. Display Output and Recommendation
+        # 4. Display Output and Recommendation Logic
         st.divider()
         st.markdown("### 📊 Hasil Analisis Model")
         
         res_col1, res_col2 = st.columns([1, 3])
         
         with res_col1:
-            st.metric(label="Predicted Exam Score", value=f"{final_score:.2f}")
+            st.metric(label="Prediksi Skor Ujian", value=f"{final_score:.2f}")
+
+        # 5. GENERATE KESIMPULAN & SARAN BERDASARKAN SKOR
+        kesimpulan = ""
+        saran = ""
         
+        if final_score >= 85:
+            st.success("🌟 **Kategori: Sangat Baik.** Siswa diprediksi mencapai performa akademik yang luar biasa.")
+            kesimpulan = "Siswa menunjukkan profil yang kuat di hampir semua faktor kunci. Prediksi skor 85 atau lebih tinggi menunjukkan peluang keberhasilan yang sangat tinggi. Perlu mempertahankan konsistensi."
+            saran = "1. **Pertahankan Kebiasaan:** Pastikan Jam Belajar, Kehadiran, dan Keterlibatan Orang Tua tetap optimal. 2. **Eksplorasi Mendalam:** Arahkan siswa untuk mendalami topik yang diminati (misalnya, melalui proyek atau penelitian independen) untuk mencapai keunggulan. 3. **Perencanaan Karir:** Mulai diskusikan pilihan universitas atau jalur karir."
+
+        elif final_score >= 70:
+            st.info("✅ **Kategori: Baik.** Siswa berada di jalur yang memuaskan namun memiliki potensi untuk meningkatkan performa.")
+            kesimpulan = "Siswa memiliki dasar akademis yang solid. Faktor-faktor lingkungan dan kebiasaan menunjukkan keseimbangan, namun ada satu atau dua area yang menahan skor untuk mencapai kategori 'Sangat Baik'."
+            saran = f"1. **Fokus pada Belajar:** Tingkatkan `Study Hours` ke 25-30 jam/minggu. 2. **Maksimalkan Dukungan:** Tambahkan `Tutoring Sessions` atau manfaatkan sumber daya akademik di sekolah. 3. **Cek Keseimbangan:** Pastikan `Sleep Hours` dan `Physical Activity` berada di zona optimal (7-8 jam tidur, 3-5 jam olahraga/minggu) untuk menghindari burnout."
+            
+        else: # final_score < 70
+            st.error("⚠️ **Kategori: Perlu Intervensi (Peringatan Dini).** Skor diprediksi rendah; tindakan segera diperlukan.")
+            kesimpulan = "Prediksi skor di bawah 70 mengindikasikan bahwa siswa menghadapi tantangan signifikan. Area `Previous Scores`, `Motivation Level`, atau `Parental Involvement` kemungkinan menjadi faktor utama yang memerlukan perhatian segera."
+            saran = f"1. **Tinjau Motivasi & Keterlibatan:** Adakan pertemuan dengan orang tua untuk meningkatkan `Parental Involvement`. Cek `Motivation Level` siswa secara berkala. 2. **Intervensi Akademik Cepat:** Fokus pada subjek terlemah. Pertimbangkan sesi bimbingan tambahan (Tutor) jika `Tutoring Sessions` masih rendah. 3. **Perbaiki Dasar:** Tingkatkan `Attendance` (kehadiran) dan pastikan `Hours_Studied` mencapai minimal 15 jam/minggu."
+
         with res_col2:
-            # Memberikan interpretasi/rekomendasi otomatis
-            if final_score >= 85:
-                st.success("🌟 **Sangat Baik!** Siswa diprediksi meraih nilai tinggi. Model memiliki MAE 0.76.")
-            elif final_score >= 70:
-                st.info("✅ **Cukup Baik.** Siswa berada di jalur aman. Rekomendasi: tingkatkan Jam Belajar atau Sesi Bimbingan.")
-            else:
-                st.error("⚠️ **Perlu Intervensi (Peringatan Dini).** Skor diprediksi rendah. Evaluasi mendalam diperlukan pada faktor-faktor Keterlibatan Orang Tua dan Motivasi.")
+            st.markdown(kesimpulan)
+        
+        st.markdown("---")
+        st.markdown("### 📋 Rekomendasi & Saran Tindakan")
+        st.warning(saran)
         
         # Optional: Display input data for verification
         with st.expander("Lihat Detail Data Siswa yang Dianalisis"):
