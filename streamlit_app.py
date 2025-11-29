@@ -36,32 +36,84 @@ def analyze_and_suggest(df, final_score):
     """Menganalisis data input dan menghasilkan saran spesifik berdasarkan kelemahan."""
     saran_spesifik = []
     
-    # 1. Analisis Faktor Akademik Kunci (Hours_Studied, Attendance, Tutoring_Sessions)
+    # --- KELOMPOK A: AKADEMIK DAN KEBIASAAN (Fokus Utama) ---
+    
+    # 1. Hours_Studied
     if df['Hours_Studied'][0] < 20:
         saran_spesifik.append(f"- **Jam Belajar:** Tingkatkan `Study Hours` (saat ini {df['Hours_Studied'][0]} jam) menjadi minimal 20-25 jam per minggu. Ini adalah faktor pendorong skor terbesar.")
     
-    if df['Attendance'][0] < 90:
+    # 2. Attendance
+    if df['Attendance'][0] < 95:
         saran_spesifik.append(f"- **Kehadiran:** Kehadiran rendah ({df['Attendance'][0]}%) berisiko besar. Harus ditingkatkan menjadi >95% untuk memastikan tidak ada materi yang terlewat.")
         
+    # 3. Tutoring_Sessions
     if df['Tutoring_Sessions'][0] == 0:
         saran_spesifik.append("- **Sesi Bimbingan:** Pertimbangkan untuk menambah Sesi Bimbingan (Tutoring Sessions) secara berkala (1-2 kali/bulan) untuk mengatasi kelemahan spesifik.")
+        
+    # 4. Previous_Scores
+    if df['Previous_Scores'][0] < 65:
+        saran_spesifik.append(f"- **Nilai Sebelumnya:** Skor sebelumnya ({df['Previous_Scores'][0]}) sangat rendah. Fokus pada penguatan dasar pengetahuan subjek yang telah lalu.")
 
-    # 2. Analisis Faktor Lingkungan & Personal (Motivation, Parental Involvement)
-    if df['Motivation_Level'][0] == 'Low' and final_score < 80:
-        saran_spesifik.append("- **Motivasi:** Tingkat Motivasi Rendah. Lakukan pendekatan personal untuk menemukan pemicu semangat belajar siswa.")
-        
+    # --- KELOMPOK B: LINGKUNGAN DAN DUKUNGAN ---
+
+    # 5. Parental_Involvement
     if df['Parental_Involvement'][0] == 'Low' and final_score < 75:
-        saran_spesifik.append("- **Keterlibatan Ortu:** Keterlibatan Orang Tua Rendah. Sekolah perlu mengadakan pertemuan untuk menyelaraskan tujuan dan meningkatkan pengawasan di rumah.")
+        saran_spesifik.append("- **Keterlibatan Ortu:** Keterlibatan Orang Tua Rendah. Sekolah perlu mengkomunikasikan pentingnya pengawasan dan dukungan belajar di rumah.")
         
-    # 3. Analisis Faktor Kesehatan (Sleep_Hours, Physical_Activity)
+    # 6. Motivation_Level
+    if df['Motivation_Level'][0] == 'Low' and final_score < 80:
+        saran_spesifik.append("- **Motivasi:** Tingkat Motivasi Rendah. Lakukan pendekatan konseling atau temukan mentor untuk memicu semangat belajar siswa.")
+
+    # 7. Access_to_Resources
+    if df['Access_to_Resources'][0] == 'Low':
+        saran_spesifik.append("- **Akses Sumber Daya:** Akses Rendah ke buku/alat. Sekolah atau Yayasan perlu menyediakan sumber daya tambahan (misalnya, perpustakaan atau tablet) untuk siswa ini.")
+
+    # 8. Internet_Access
+    if df['Internet_Access'][0] == 'No':
+        saran_spesifik.append("- **Akses Internet:** Ketiadaan akses Internet. Sarankan penggunaan fasilitas sekolah atau perpustakaan untuk pekerjaan rumah dan riset.")
+    
+    # 9. Family_Income
+    if df['Family_Income'][0] == 'Low':
+        saran_spesifik.append("- **Pendapatan Keluarga:** Pendapatan Rendah. Pertimbangkan beasiswa atau bantuan dana untuk meringankan beban dan memungkinkan siswa fokus belajar.")
+        
+    # 10. Teacher_Quality
+    if df['Teacher_Quality'][0] == 'Low' and final_score < 70:
+        saran_spesifik.append("- **Kualitas Guru:** Nilai kualitas Guru yang rendah. Perlu evaluasi atau pertimbangan untuk memindahkan siswa ke kelas dengan metode pengajaran yang lebih efektif.")
+
+    # 11. Peer_Influence
+    if df['Peer_Influence'][0] == 'Negative':
+        saran_spesifik.append("- **Pengaruh Teman Sebaya:** Pengaruh Negatif. Konseling diperlukan untuk membantu siswa memilih lingkungan pertemanan yang mendukung akademik.")
+
+    # 12. Parental_Education_Level (Jika skor rendah dan pendidikan ortu rendah, perlu intervensi sekolah)
+    if df['Parental_Education_Level'][0] == 'High School' and final_score < 70:
+        saran_spesifik.append("- **Edukasi Ortu:** Sekolah dapat menawarkan lokakarya bimbingan studi yang ditargetkan untuk orang tua dengan tingkat pendidikan SMA ke bawah.")
+    
+    # 13. Distance_from_Home
+    if df['Distance_from_Home'][0] == 'Far':
+        saran_spesifik.append("- **Jarak Rumah:** Jarak yang Jauh dapat memengaruhi energi dan kehadiran. Pastikan transportasi siswa konsisten dan aman.")
+        
+    # --- KELOMPOK C: KESEHATAN DAN KESEIMBANGAN ---
+    
+    # 14. Sleep_Hours
     sleep = df['Sleep_Hours'][0]
     if sleep < 6:
         saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur terlalu singkat ({sleep} jam). Pastikan siswa tidur 7-8 jam per hari untuk konsentrasi optimal.")
     elif sleep > 9:
-        saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur ({sleep} jam) mungkin berlebihan. Perlu evaluasi apakah ini disebabkan oleh kelelahan atau masalah lain.")
+        saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur ({sleep} jam) mungkin berlebihan. Perlu evaluasi apakah ini disebabkan oleh kelelahan atau masalah medis.")
         
+    # 15. Physical_Activity
     if df['Physical_Activity'][0] < 2:
         saran_spesifik.append("- **Aktivitas Fisik:** Tingkat Aktivitas Fisik rendah. Dorong siswa untuk berolahraga minimal 3 jam per minggu untuk menjaga kesehatan mental dan fokus.")
+        
+    # 16. Extracurricular_Activities
+    if df['Extracurricular_Activities'][0] == 'No' and final_score > 75:
+        saran_spesifik.append("- **Kegiatan Ekstrakurikuler:** Pertimbangkan untuk mendorong siswa ikut ekstrakurikuler (saat ini 'No') untuk mengembangkan *soft skills* dan manajemen waktu.")
+
+    # 17. Learning_Disabilities
+    if df['Learning_Disabilities'][0] == 'Yes':
+        saran_spesifik.append("- **Kesulitan Belajar:** Karena siswa memiliki 'Learning Disabilities', intervensi harus melibatkan dukungan guru pendamping dan metode pengajaran adaptif.")
+
+    # 18. School_Type & 19. Gender tidak memiliki saran spesifik yang bersifat intervensi langsung, tetapi dapat dimasukkan dalam evaluasi sekolah secara internal.
         
     return saran_spesifik
 
