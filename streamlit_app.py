@@ -13,10 +13,6 @@ st.set_page_config(
 # --- 2. LOAD MODEL & PREPROCESSOR ---
 @st.cache_resource
 def load_assets():
-    """
-    Loads the LightGBM model (.pkl) and the preprocessor (.pkl).
-    Catatan: Model final adalah LightGBM dengan MAE 0.76.
-    """
     try:
         # Load LightGBM model
         model = joblib.load('final_model.pkl')
@@ -144,9 +140,9 @@ def analyze_and_suggest(df, final_score):
     return saran_spesifik
 
 # --- 3. JUDUL & HEADER ---
-st.title("🎓 Prediksi Performa Siswa (Model LightGBM)")
+st.title("🎓 Student Exam Score Prediction (LightGBM Model)")
 st.markdown("""
-Aplikasi ini menggunakan **Model LightGBM** yang sangat akurat (MAE 0.76) untuk memprediksi nilai ujian siswa, mempertimbangkan **19 faktor** (Akademik, Lingkungan, dan Personal).
+This application uses the highly accurate LightGBM Model (MAE 0.76) to predict students' exam scores, taking into account 19 factors (Academic, Environmental, and Personal).
 """)
 
 if model is None or preprocessor is None:
@@ -156,8 +152,8 @@ if model is None or preprocessor is None:
 # --- 4. FULL INPUT FORM (19 FEATURES) ---
 with st.form("full_prediction_form"):
 
-    # --- SECTION 1: AKADEMIK & KEBIASAAN ---
-    st.subheader("📚 Data Akademik & Kebiasaan") # Judul dalam B. Indonesia
+    # --- SECTION 1: Academic factors ---
+    st.subheader("📚 Academic factors") 
     col1, col2, col3 = st.columns(3)
     
     with col1:
@@ -178,10 +174,10 @@ with st.form("full_prediction_form"):
 
     st.divider()
 
-    # --- SECTION 2: LINGKUNGAN & DUKUNGAN ---
-    st.subheader("🏠 Lingkungan & Dukungan") # Judul dalam B. Indonesia
+    # --- SECTION 2: Environmental factors ---
+    st.subheader("🏠 Environmental factors") 
     
-    with st.expander("Isi Detail Lingkungan Siswa", expanded=True): # Sub-judul dalam B. Indonesia
+    with st.expander("Fill in Student Environment Details", expanded=True): 
         col4, col5, col6 = st.columns(3)
         
         with col4:
@@ -203,8 +199,8 @@ with st.form("full_prediction_form"):
             internet_access = st.radio("Internet Access", ["Yes", "No"], horizontal=True)
             distance_home = st.selectbox("Distance from Home", ["Near", "Moderate", "Far"])
 
-    # --- SECTION 3: FAKTOR PERSONAL LAINNYA ---
-    st.subheader("👤 Faktor Personal Lainnya") # Judul dalam B. Indonesia
+    # --- SECTION 3: OTHER PERSONAL FACTORS ---
+    st.subheader("👤 Other Personal Factors") 
     col7, col8, col9 = st.columns(3)
     with col7:
         # Peningkatan default dari Medium menjadi High
@@ -219,7 +215,7 @@ with st.form("full_prediction_form"):
     extra_val = "Yes" if extra_activities else "No"
     learning_val = "Yes" if learning_disabilities else "No"
 
-    submit_btn = st.form_submit_button("🔍 Analisis & Prediksi", type="primary") # Tombol dalam B. Indonesia
+    submit_btn = st.form_submit_button("🔍 Analysis & Prediction", type="primary") 
 
 # --- 5. PREDICTION LOGIC & OUTPUT ---
 if submit_btn:
@@ -269,47 +265,47 @@ if submit_btn:
         
         # 4. Display Output and Recommendation Logic
         st.divider()
-        st.markdown("### 📊 Hasil Analisis Model")
+        st.markdown("### 📊 Model Analysis Results")
         
         res_col1, res_col2 = st.columns([1, 3])
         
         with res_col1:
-            st.metric(label="Prediksi Skor Ujian", value=f"{final_score:.2f}")
+            st.metric(label="Exam Score Prediction", value=f"{final_score:.2f}")
 
         # 5. GENERATE KESIMPULAN & SARAN BERDASARKAN SKOR
         saran_spesifik = analyze_and_suggest(input_df, final_score)
         
         if final_score >= 85:
-            st.success("🌟 **Kategori: Sangat Baik.** Siswa diprediksi mencapai performa akademik yang luar biasa.")
-            kesimpulan = "Siswa menunjukkan profil yang sangat kuat. Perlu mempertahankan konsistensi dan terus mencari peluang untuk keunggulan."
+            st.success("🌟 **Category: Very Good.** Students are predicted to achieve outstanding academic performance.")
+            conclusion = "The student demonstrates a very strong profile. Needs to maintain consistency and continue to seek opportunities for excellence."
         
         elif final_score >= 70:
-            st.info("✅ **Kategori: Baik.** Siswa berada di jalur yang memuaskan namun memiliki potensi untuk meningkatkan performa.")
-            kesimpulan = "Siswa memiliki dasar akademis yang solid, namun terdapat beberapa faktor kebiasaan atau lingkungan yang dapat ditingkatkan untuk mencapai kategori 'Sangat Baik'."
+            st.info("✅ **Category: Good.** The student is on a satisfactory track but has potential to improve performance.")
+            conclusion = "The student has a solid academic foundation, but there are several habitual or environmental factors that could be improved to achieve the 'Very Good' category."
 
         else: # final_score < 70
-            st.error("⚠️ **Kategori: Perlu Intervensi (Peringatan Dini).** Skor diprediksi rendah; tindakan segera diperlukan.")
-            kesimpulan = "Prediksi skor rendah mengindikasikan bahwa siswa menghadapi tantangan signifikan. Fokus utama harus diberikan pada faktor-faktor kunci yang dinilai lemah dalam profil input."
+            st.error("⚠️ **Category: Intervention Required (Early Warning).** Predicted score is low; immediate action is required.")
+            conclusion = "Low predicted scores indicate that students face significant challenges. Primary focus should be given to key factors assessed as weak in the input profile."
         
         with res_col2:
-            st.markdown(kesimpulan)
+            st.markdown(conclusion)
         
         st.markdown("---")
-        st.markdown("### 📋 Rekomendasi Tindakan Spesifik")
+        st.markdown("### 📋 Specific Action Recommendations")
 
         if saran_spesifik:
             # Jika ada saran spesifik berdasarkan variabel input yang lemah
-            st.warning("Berdasarkan data input siswa, berikut adalah prioritas tindakan untuk meningkatkan skor:")
+            st.warning("Based on student input data, the following are priority actions to improve scores.:")
             for saran in saran_spesifik:
                 st.markdown(saran)
         else:
             # Jika skor sangat tinggi dan tidak ada variabel yang 'lemah'
-            st.success("Semua faktor kunci berada pada tingkat optimal. Tidak ada intervensi mendesak yang diperlukan selain mempertahankan konsistensi.")
+            st.success("All key factors are at optimal levels. No urgent intervention is required other than maintaining consistency.")
         
         # Optional: Display input data for verification
-        with st.expander("Lihat Detail Data Siswa yang Dianalisis"):
+        with st.expander("View Details of Analyzed Student Data"):
             st.dataframe(input_df)
 
     except Exception as e:
-        st.error(f"Terjadi kesalahan sistem saat prediksi: {e}")
-        st.write("Pastikan objek preprocessor dan model (.pkl) valid. Error detail: " + str(e))
+        st.error(f"A system error occurred during prediction.: {e}")
+        st.write("Ensure preprocessor and model objects (.pkl) are valid. Error detail: " + str(e))
