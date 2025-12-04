@@ -36,104 +36,104 @@ def analyze_and_suggest(df, final_score):
     
     # 1. Hours_Studied
     if df['Hours_Studied'][0] < 15: # Kritis (Low)
-        saran_spesifik.append(f"- **Jam Belajar:** Tingkatkan `Study Hours` (saat ini {df['Hours_Studied'][0]} jam) menjadi minimal 20-25 jam per minggu. Ini adalah faktor pendorong skor terbesar.")
+        saran_spesifik.append(f"- **Hours Studied:** Increase your `Study Hours` (currently {df['Hours_Studied'][0]} hours) to at least 20-25 hours per week. This is the biggest driver of your score.")
     elif df['Hours_Studied'][0] < 20: # Perlu Peningkatan (Medium)
-        saran_spesifik.append(f"- **Jam Belajar:** Jam belajar ({df['Hours_Studied'][0]} jam) sudah baik, namun peningkatkan sedikit (20-22 jam) dapat memberi dorongan signifikan ke skor tertinggi.")
+        saran_spesifik.append(f"- **Hours Studied:** Study hours ({df['Hours_Studied'][0]} hours) are already good, but a small increase (20-22 hours) can give a significant boost to the top score.")
     
     # 2. Attendance
     if df['Attendance'][0] < 90: # Kritis (Low)
-        saran_spesifik.append(f"- **Kehadiran:** Kehadiran rendah ({df['Attendance'][0]}%) berisiko besar. Harus ditingkatkan menjadi >95% untuk memastikan tidak ada materi yang terlewat.")
+        saran_spesifik.append(f"- **Attendance:** Low attendance ({df['Attendance'][0]}%) is a major risk. It should be increased to >95% to ensure no material is missed.")
     elif df['Attendance'][0] < 95: # Perlu Peningkatan (Medium)
-        saran_spesifik.append(f"- **Kehadiran:** Kehadiran ({df['Attendance'][0]}%) mendekati optimal. Targetkan 100% untuk meminimalkan risiko kehilangan materi penting.")
+        saran_spesifik.append(f"- **Attendance:** Attendance ({df['Attendance'][0]}%) is near optimal. Aim for 100% to minimize the risk of missing important material.")
         
     # 3. Tutoring_Sessions
     if df['Tutoring_Sessions'][0] == 0: # Kritis (Low)
-        saran_spesifik.append("- **Sesi Bimbingan:** Pertimbangkan untuk menambah Sesi Bimbingan (Tutoring Sessions) secara berkala (1-2 kali/bulan) untuk mengatasi kelemahan spesifik.")
+        saran_spesifik.append("- **Tutoring Sessions:** Consider adding regular Tutoring Sessions (1-2 times/month) to address specific weaknesses.")
     elif df['Tutoring_Sessions'][0] == 1 and final_score < 80: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Sesi Bimbingan:** Satu sesi per bulan sudah membantu. Jika skor perlu ditingkatkan, tambahkan menjadi 2-3 sesi per bulan.")
+        saran_spesifik.append("- **Tutoring Sessions:** One session per month is sufficient. If your score needs improvement, increase it to 2-3 sessions per month.")
         
     # 4. Previous_Scores
     if df['Previous_Scores'][0] < 70: # Kritis (Low)
-        saran_spesifik.append(f"- **Nilai Sebelumnya:** Skor sebelumnya ({df['Previous_Scores'][0]}) rendah. Fokus pada penguatan dasar pengetahuan subjek yang telah lalu.")
+        saran_spesifik.append(f"- **Previous Scores:** Previous scores ({df['Previous_Scores'][0]}) are low. Focus on strengthening previous subject knowledge base.")
     elif df['Previous_Scores'][0] < 80: # Perlu Peningkatan (Medium)
-        saran_spesifik.append(f"- **Nilai Sebelumnya:** Skor sebelumnya ({df['Previous_Scores'][0]}) berada di level 'Bagus'. Analisis di mana poin hilang untuk mencapai skor >85.")
+        saran_spesifik.append(f"- **Previous Scores:** The previous score ({df['Previous_Scores'][0]}) was at the 'Good' level. Analyze where points were lost to achieve a score >85.")
 
     # --- KELOMPOK B: LINGKUNGAN DAN DUKUNGAN ---
 
     # 5. Parental_Involvement
     if df['Parental_Involvement'][0] == 'Low': # Kritis (Low)
-        saran_spesifik.append("- **Keterlibatan Ortu:** Keterlibatan Orang Tua Rendah. Sekolah perlu mengkomunikasikan pentingnya pengawasan dan dukungan belajar di rumah.")
+        saran_spesifik.append("- **Parental Involvement:** Low Parental Involvement. Schools need to communicate the importance of monitoring and supporting home learning.")
     elif df['Parental_Involvement'][0] == 'Medium' and final_score < 85: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Keterlibatan Ortu:** Keterlibatan Medium sudah baik. Dorong orang tua untuk terlibat lebih spesifik (misalnya, meninjau hasil belajar mingguan) untuk mencapai hasil optimal.")
+        saran_spesifik.append("- **Parental Involvement:** Medium engagement is good. Encourage parents to be more involved (e.g., reviewing weekly learning outcomes) to achieve optimal results.")
         
     # 6. Motivation_Level
     if df['Motivation_Level'][0] == 'Low': # Kritis (Low)
-        saran_spesifik.append("- **Motivasi:** Tingkat Motivasi Rendah. Lakukan pendekatan konseling atau temukan mentor untuk memicu semangat belajar siswa.")
+        saran_spesifik.append("- **Motivation Level:** Low Motivation Levels. Take a counseling approach or find a mentor to spark students' enthusiasm for learning.")
     elif df['Motivation_Level'][0] == 'Medium' and final_score < 85: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Motivasi:** Tingkat Motivasi Medium. Bantuan siswa menetapkan tujuan akademik jangka pendek yang jelas untuk menjaga momentum dan fokus.")
+        saran_spesifik.append("- **Motivation Level:** Medium Motivation Level. Help students set clear short-term academic goals to maintain momentum and focus.")
 
     # 7. Access_to_Resources
     if df['Access_to_Resources'][0] == 'Low': # Kritis (Low)
-        saran_spesifik.append("- **Akses Sumber Daya:** Akses Rendah ke buku/alat. Sekolah atau Yayasan perlu menyediakan sumber daya tambahan (misalnya, perpustakaan atau tablet) untuk siswa ini.")
+        saran_spesifik.append("- **Access to Resources:** Low access to books/tools. Schools or foundations need to provide additional resources (e.g., libraries or tablets) for these students.")
     elif df['Access_to_Resources'][0] == 'Medium': # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Akses Sumber Daya:** Akses Medium. Pastikan siswa tahu cara memaksimalkan sumber daya yang ada dan mempertimbangkan untuk menyediakan beberapa sumber daya premium.")
+        saran_spesifik.append("- **Access to Resources:** Medium Access. Ensure students know how to maximize available resources and consider providing some premium resources.")
 
     # 8. Internet_Access (Hanya ada Yes/No, jadi fokus pada 'No')
     if df['Internet_Access'][0] == 'No':
-        saran_spesifik.append("- **Akses Internet:** Ketiadaan akses Internet. Sarankan penggunaan fasilitas sekolah atau perpustakaan untuk pekerjaan rumah dan riset.")
+        saran_spesifik.append("- **Internet Access:** Lack of Internet access. Suggest using school or library facilities for homework and research.")
     
     # 9. Family_Income
     if df['Family_Income'][0] == 'Low': # Kritis (Low)
-        saran_spesifik.append("- **Pendapatan Keluarga:** Pendapatan Rendah. Pertimbangkan beasiswa atau bantuan dana untuk meringankan beban dan memungkinkan siswa fokus belajar.")
+        saran_spesifik.append("- **Family Income:** Low Income. Consider scholarships or financial aid to ease the burden and allow students to focus on their studies.")
     elif df['Family_Income'][0] == 'Medium' and final_score < 85: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Pendapatan Keluarga:** Pendapatan Medium. Pastikan tidak ada tekanan finansial tak terduga yang mengganggu fokus belajar siswa.")
+        saran_spesifik.append("- **Family Income:** Medium Income. Ensure that no unexpected financial pressures interfere with students' focus on learning.")
         
     # 10. Teacher_Quality
     if df['Teacher_Quality'][0] == 'Low': # Kritis (Low)
-        saran_spesifik.append("- **Kualitas Guru:** Nilai kualitas Guru yang rendah. Perlu evaluasi atau pertimbangan untuk memindahkan siswa ke kelas dengan metode pengajaran yang lebih efektif.")
+        saran_spesifik.append("- **Teacher Quality:** Low teacher quality ratings. Evaluation or consideration of moving students to classes with more effective teaching methods is needed.")
     elif df['Teacher_Quality'][0] == 'Medium' and final_score < 85: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Kualitas Guru:** Kualitas Guru Medium. Dorong siswa untuk proaktif mencari bantuan tambahan atau materi dari guru lain/mentor.")
+        saran_spesifik.append("- **Teacher Quality:** Medium Teacher Quality. Encourage students to proactively seek additional help or materials from other teachers/mentors.")
 
     # 11. Peer_Influence
     if df['Peer_Influence'][0] == 'Negative': # Kritis (Low)
-        saran_spesifik.append("- **Pengaruh Teman Sebaya:** Pengaruh Negatif. Konseling diperlukan untuk membantu siswa memilih lingkungan pertemanan yang mendukung akademik.")
+        saran_spesifik.append("- **Peer Influence:** Negative Influences. Counseling is needed to help students choose a supportive social environment.")
     elif df['Peer_Influence'][0] == 'Neutral' and final_score < 80: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Pengaruh Teman Sebaya:** Pengaruh Netral. Dorong siswa untuk aktif berinteraksi dengan teman sebaya yang memiliki tujuan akademik yang positif.")
+        saran_spesifik.append("- **Peer Influence:** Neutral Influence. Encourage students to actively interact with peers who have positive academic goals.")
 
     # 12. Parental_Education_Level (Jika skor rendah dan pendidikan ortu rendah, perlu intervensi sekolah)
     if df['Parental_Education_Level'][0] == 'High School' and final_score < 75:
-        saran_spesifik.append("- **Edukasi Ortu:** Sekolah dapat menawarkan lokakarya bimbingan studi yang ditargetkan untuk orang tua dengan tingkat pendidikan SMA ke bawah.")
+        saran_spesifik.append("- **Parental Education Level:** Schools can offer study guidance workshops targeted at parents with a high school education or lower.")
     
     # 13. Distance_from_Home
     if df['Distance_from_Home'][0] == 'Far': # Kritis (Low)
-        saran_spesifik.append("- **Jarak Rumah:** Jarak yang Jauh dapat memengaruhi energi dan kehadiran. Pastikan transportasi siswa konsisten dan aman.")
+        saran_spesifik.append("- **Distance from Home:** Long distances can impact energy and attendance. Ensure student transportation is consistent and safe.")
     elif df['Distance_from_Home'][0] == 'Moderate' and final_score < 75: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Jarak Rumah:** Jarak Moderate. Pastikan siswa memiliki waktu istirahat yang cukup setelah bepergian jauh untuk mengembalikan energi belajar.")
+        saran_spesifik.append("- **Distance from Home:** Moderate Distance. Ensure students have sufficient rest time after long journeys to restore their learning energy.")
         
     # --- KELOMPOK C: KESEHATAN DAN KESEIMBANGAN ---
     
     # 14. Sleep_Hours
     sleep = df['Sleep_Hours'][0]
     if sleep < 6: # Kritis (Low)
-        saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur terlalu singkat ({sleep} jam). Pastikan siswa tidur 7-8 jam per hari untuk konsentrasi optimal.")
+        saran_spesifik.append(f"- **Sleep Hours:** Too little sleep ({sleep} hours). Ensure students get 7-8 hours of sleep per day for optimal concentration.")
     elif sleep == 6: # Perlu Peningkatan (Medium)
-        saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur ({sleep} jam) berada di batas minimal. Targetkan 7-8 jam untuk meningkatkan daya ingat dan fokus secara signifikan.")
+        saran_spesifik.append(f"- **Sleep Hours:** Sleep time ({sleep} hours) is at a minimum. Aim for 7-8 hours to significantly improve memory and focus.")
     elif sleep > 9: # Kritis (Over)
-        saran_spesifik.append(f"- **Waktu Tidur:** Waktu Tidur ({sleep} jam) mungkin berlebihan. Perlu evaluasi apakah ini disebabkan oleh kelelahan atau masalah medis.")
+        saran_spesifik.append(f"- **Sleep Hours:** Sleep time ({sleep} hours) may be excessive. It is necessary to evaluate whether this is due to fatigue or a medical problem.")
         
     # 15. Physical_Activity
     if df['Physical_Activity'][0] < 2: # Kritis (Low)
-        saran_spesifik.append("- **Aktivitas Fisik:** Tingkat Aktivitas Fisik rendah. Dorong siswa untuk berolahraga minimal 3 jam per minggu untuk menjaga kesehatan mental dan fokus.")
+        saran_spesifik.append("- **Physical Activity:** Low Physical Activity Levels. Encourage students to exercise at least 3 hours per week to maintain mental health and focus.")
     elif df['Physical_Activity'][0] < 3: # Perlu Peningkatan (Medium)
-        saran_spesifik.append("- **Aktivitas Fisik:** Tingkat Aktivitas Fisik sudah baik. Tambahkan sedikit aktivitas (misalnya, 3-4 jam) untuk manfaat kesehatan mental yang optimal.")
+        saran_spesifik.append("- **Physical Activity:** Physical activity levels are already good. Add a little activity (e.g., 3-4 hours) for optimal mental health benefits.")
         
     # 16. Extracurricular_Activities
     if df['Extracurricular_Activities'][0] == 'No' and final_score > 70:
-        saran_spesifik.append("- **Kegiatan Ekstrakurikuler:** Pertimbangkan untuk mendorong siswa ikut ekstrakurikuler (saat ini 'No') untuk mengembangkan *soft skills* dan manajemen waktu.")
+        saran_spesifik.append("- **Extracurricular Activities:** Consider encouraging students to participate in extracurriculars (currently 'No') to develop *soft skills* and time management.")
 
     # 17. Learning_Disabilities
     if df['Learning_Disabilities'][0] == 'Yes':
-        saran_spesifik.append("- **Kesulitan Belajar:** Karena siswa memiliki 'Learning Disabilities', intervensi harus melibatkan dukungan guru pendamping dan metode pengajaran adaptif.")
+        saran_spesifik.append("- **Learning Disabilities:** Because students have 'Learning Disabilities', interventions must involve the support of a companion teacher and adaptive teaching methods.")
 
     # 18. School_Type & 19. Gender tidak memiliki saran spesifik yang bersifat intervensi langsung, tetapi dapat dimasukkan dalam evaluasi sekolah secara internal.
         
